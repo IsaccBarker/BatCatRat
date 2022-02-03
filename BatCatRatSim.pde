@@ -7,6 +7,7 @@ Vector<Vector<Entity>> sectors = new Vector<Vector<Entity>>();
 Vector<Notification> notifications = new Vector<Notification>();
 Vector<Integer> ratsInSectors = new Vector<Integer>();
 Vector<Integer> catsInSectors = new Vector<Integer>();
+
 int numCats = 0;
 int numRats = 0;
 int highestCatSector = 0;
@@ -15,10 +16,10 @@ int highestRatSectorRow = 0;
 int highestRatSectorColumn = 0;
 
 void setup() {
-  size(1000, 1000);
+  size(1500, 1500);
   background(0, 0, 0);
   stroke(255, 0, 0, 100);
-  frameRate(30);
+  // frameRate(30);
   
   // We set these here beacuse of the updated
   // width value.

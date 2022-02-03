@@ -1,3 +1,6 @@
+Boolean drawNotifications = true;
+Boolean drawSectors = true;
+
 void draw() {
   precomputeTickData();
 
@@ -19,10 +22,13 @@ void drawFrame() {
   clear();
   
   tickAll();
-  drawSectorBoundaries();
-  drawSectorWeights();
+  
+  if (drawNotifications) drawNotifications();
+  if (drawSectors) { drawSectorBoundaries(); drawSectorWeights(); }
+  
+  if (!drawNotifications) notifications.clear();
+  
   drawEntities();
-  drawNotifications();
 }
 
 void drawEntities() {
@@ -48,7 +54,7 @@ void drawEntities() {
       rect(entity.getXPosition(), entity.getYPosition(), 10, 10);
       
       fill(255, 0, 255, 255);
-      text("id: " + entity.id, entity.getXPosition(), entity.getYPosition());
+      // text("id: " + entity.id, entity.getXPosition(), entity.getYPosition());
     // }
   }
 }

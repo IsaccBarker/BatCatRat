@@ -4,7 +4,6 @@ public class Rat extends Entity {
   Rat(int sectorRow, int sectorColumn, int i) {
     sector = i;
     id = (int) random(-32767, 32767);
-    angle = (int) random(0, 360);
     this.sectorRow = sectorRow;
     this.sectorColumn = sectorColumn;
          
@@ -12,16 +11,7 @@ public class Rat extends Entity {
     yPosition = (sectorColumn * SECTOR_EVERY) + (int) random(SECTOR_EVERY);
   }
   
-  void tick(Vector<Entity> sector) {
-    move();
-    
-    // Did we starve to death
-    if (ticksUntilBleh == 0) {
-      System.out.println("rat died of natural causes");
-      sector.remove(this); 
-    }
-    
-    // Reproduce
+  void reproduce(Vector<Entity> sector) {
     for (int i = 0; i < sector.size(); i++) {
       Entity entity = sector.get(i);
       
@@ -36,20 +26,31 @@ public class Rat extends Entity {
         }
       }
     }
-    
-    // https://en.wikipedia.org/wiki/Behavioral_sink
-    // Spread the rats out, or kill them if the population gets high enough for
-    // societal collapse.
+  }
+  
+  void behavioral_sink(Vector<Entity> sector) {
     if (sector.size() > RAT_SINK_LETHAL_THRESHHOLD) {
       for (int i = 0; i < RAT_BULK_REMOVAL; i++) {
          sector.remove(sector.size()-1);
       }
     }
+  }
+  
+  void tick(Vector<Entity> sector) {
+    move();
     
-    if (sector.size() > RAT_SINK_SCURRY_THRESHHOLD) {
-      xPosition += (int) random(-RAT_SCURRY_SPEED, RAT_SCURRY_SPEED);
-      yPosition += (int) random(-RAT_SCURRY_SPEED, RAT_SCURRY_SPEED);
+    // Did we starve to death
+    if (ticksUntilBleh == 0) {
+      sector.remove(this); 
     }
+    
+    // Reproduce, if possible
+    reproduce(sector);
+    
+    // https://en.wikipedia.org/wiki/Behavioral_sink
+    // Spread the rats out, or kill them if the population gets high enough for
+    // societal collapse.
+    behavioral_sink(sector);
     
     ticksUntilBleh--;
   }

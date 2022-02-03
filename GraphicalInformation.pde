@@ -1,3 +1,5 @@
+int weightSub = 1;
+
 void drawSectorBoundaries() {
   stroke(255, 255, 255, 100);
   for (int x = 0; x < width; x += width / SECTORS_PER) {
@@ -15,7 +17,7 @@ void drawSectorWeights() {
   
   for (int y = 0; y < height; y += height / SECTORS_PER) {
     for (int x = 0; x < width; x += width / SECTORS_PER) {
-      int weight = sectors.get(i).size() * 100 / SECTORS_PER;
+      int weight = (sectors.get(i).size() * 100 / SECTORS_PER) - weightSub;
       String entitiesText = "entities: " + sectors.get(i).size() + "(" + weight + ")";
       String sectorText = "sector  : " + i;
      

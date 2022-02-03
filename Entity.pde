@@ -4,8 +4,10 @@ public abstract class Entity {
   protected int sector = 0;
   protected int sectorRow = 0;
   protected int sectorColumn = 0;
+  protected int xTarget = -1;
+  protected int yTarget = -1;
   protected int id = 0;
-  protected int angle = 0;
+  protected Boolean moveOverride = false;
   
   int getXPosition() {
     return xPosition;
@@ -15,15 +17,34 @@ public abstract class Entity {
     return yPosition;
   }
   
-  void move() {
-    // Move a random amount
-    xPosition += (int) random(-5, 5);
-    yPosition += (int) random(-5, 5);
-    
-    // TODO: Fix angle based movement.
-    // xPosition += 10.0 * Math.sin(angle);
-    // yPosition += 10.0 * Math.cos(angle);
-    // angle += random(-0.1, 0.1);
+  void setXTarget(int x) {
+    xTarget = x;
+  }
+  
+  void setYTarget(int y) {
+    yTarget = y;
+  }
+  
+  void move() {    
+    if (!moveOverride) {
+      if (xTarget == -1 && yTarget == -1) {
+        xTarget = (xPosition + (int) random(-SECTOR_EVERY, SECTOR_EVERY));
+        yTarget = (yPosition + (int) random(-SECTOR_EVERY, SECTOR_EVERY));
+        
+        int angle = (int) Math.toDegrees(Math.atan2(yTarget - yPosition, xTarget - xPosition));
+        xPosition += 5.0 * Math.sin(-angle);
+        yPosition += 5.0 * Math.cos(-angle);
+      }
+      
+      int angle = (int) Math.toDegrees(Math.atan2(yTarget - yPosition, xTarget - xPosition));
+      xPosition += 5.0 * Math.sin(-angle);
+      yPosition += 5.0 * Math.cos(-angle);
+      
+      if (xPosition == xTarget && yPosition == yTarget) {
+        xTarget = -1;
+        yTarget = -1;
+      }
+    }
     
     // Bounds checking
     if (xPosition > width-1) {
@@ -36,12 +57,6 @@ public abstract class Entity {
       yPosition = height-1;
     } else if (yPosition < 1) {
       yPosition = 2;
-    }
-    
-    if (angle > 360) {
-      angle = 360; 
-    } else if (angle < 0) {
-      angle = 0; 
     }
     
     // Add to new sector
